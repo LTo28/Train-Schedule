@@ -10,10 +10,10 @@ const config = {
 firebase.initializeApp(config)
 
 let db = firebase.firestore()
-//save input to database
+
+//saves user input to db
 document.querySelector(".submit").addEventListener("click", e => {
   e.preventDefault()
-  console.log("hello")
   let id = db.collection("submissions").doc().id
   db.collection("submissions").doc(id).set({
     trainName: document.querySelector("#trainName").value,
@@ -27,28 +27,30 @@ document.querySelector(".submit").addEventListener("click", e => {
   document.querySelector("#frequency").value = ''
 })
 
+//displays user input on client side
 db.collection('submissions').orderBy('time').onSnapshot(({ docs }) => {
   document.querySelector(".display").innerHTML = ''
   docs.forEach(doc => {
     //console.log(doc.data())
     let { trainName, destination, time, frequency } = doc.data()
+    //console.log(doc.id)
     let display = document.createElement("tr")
     display.innerHTML = `
     <th scope="row">${trainName}</th>
     <td>${destination}</td>
     <td>${time}</td>
     <td>${frequency}</td>
+    <button data-uid="${doc.id}" id="rmUser">Delete</button>
     `
     document.querySelector(".display").append(display)
   })
 })
 
-// document.querySelector("#getData").addEventListener("click", e => {
-//   db.collection("submissions").orderBy('time').get()
-//     .then(({ docs }) => {
-//       docs.forEach(doc => {
-//         console.log(doc.data())
-//       })
-//     })
-//     .catch(e => console.error(e))
-// })
+//remove data from client side
+document.addEventListener("click", ({ target }) => {
+  if (target.id === "rmUser") {
+    db.collection('submissions').doc(target.dataset.uid).delete()
+  }
+})
+
+// Need to code the calculation on when the next train will arrive relative to the current time
