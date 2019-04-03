@@ -26,3 +26,29 @@ document.querySelector(".submit").addEventListener("click", e => {
   document.querySelector("#time").value = ''
   document.querySelector("#frequency").value = ''
 })
+
+db.collection('submissions').orderBy('time').onSnapshot(({ docs }) => {
+  document.querySelector(".display").innerHTML = ''
+  docs.forEach(doc => {
+    //console.log(doc.data())
+    let { trainName, destination, time, frequency } = doc.data()
+    let display = document.createElement("tr")
+    display.innerHTML = `
+    <th scope="row">${trainName}</th>
+    <td>${destination}</td>
+    <td>${time}</td>
+    <td>${frequency}</td>
+    `
+    document.querySelector(".display").append(display)
+  })
+})
+
+// document.querySelector("#getData").addEventListener("click", e => {
+//   db.collection("submissions").orderBy('time').get()
+//     .then(({ docs }) => {
+//       docs.forEach(doc => {
+//         console.log(doc.data())
+//       })
+//     })
+//     .catch(e => console.error(e))
+// })
