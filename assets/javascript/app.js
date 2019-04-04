@@ -34,12 +34,15 @@ db.collection('submissions').orderBy('time').onSnapshot(({ docs }) => {
     //console.log(doc.data())
     let { trainName, destination, time, frequency } = doc.data()
     //console.log(doc.id)
+    console.log(moment(time, 'HH:mm').format('hh:mm a'))
+    //console.log(parseInt(frequency))
     let display = document.createElement("tr")
     display.innerHTML = `
     <th scope="row">${trainName}</th>
     <td>${destination}</td>
-    <td>${time}</td>
+    <td>${moment(time, 'HH:mm').format('hh:mm a')}</td>
     <td>${frequency}</td>
+    <td></td>
     <button data-uid="${doc.id}" id="rmUser">Delete</button>
     `
     document.querySelector(".display").append(display)
@@ -54,3 +57,5 @@ document.addEventListener("click", ({ target }) => {
 })
 
 // Need to code the calculation on when the next train will arrive relative to the current time
+
+console.log(moment(time, 'HH:mm'))
